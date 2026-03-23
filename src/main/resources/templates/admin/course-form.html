@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${isEdit} ? 'Update Course' : 'Create Course'"></title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<main class="form-wrapper">
+    <h2 th:text="${isEdit} ? 'Update Course' : 'Create Course'"></h2>
+
+    <form th:if="${isEdit}" th:action="@{/admin/courses/edit/{id}(id=${course.id})}" th:object="${courseForm}" method="post" class="card-form">
+        <label>Course Name</label>
+        <input type="text" th:field="*{name}" required>
+        <small class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small>
+
+        <label>Image URL</label>
+        <input type="text" th:field="*{image}" required>
+        <small class="error" th:if="${#fields.hasErrors('image')}" th:errors="*{image}"></small>
+
+        <label>Credits</label>
+        <input type="number" th:field="*{credits}" min="1" required>
+        <small class="error" th:if="${#fields.hasErrors('credits')}" th:errors="*{credits}"></small>
+
+        <label>Lecturer</label>
+        <input type="text" th:field="*{lecturer}" required>
+        <small class="error" th:if="${#fields.hasErrors('lecturer')}" th:errors="*{lecturer}"></small>
+
+        <label>Category</label>
+        <select th:field="*{categoryId}" required>
+            <option value="">-- Select Category --</option>
+            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+        </select>
+        <small class="error" th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}"></small>
+
+        <button type="submit">Update</button>
+    </form>
+
+    <form th:unless="${isEdit}" th:action="@{/admin/courses/create}" th:object="${courseForm}" method="post" class="card-form">
+        <label>Course Name</label>
+        <input type="text" th:field="*{name}" required>
+        <small class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small>
+
+        <label>Image URL</label>
+        <input type="text" th:field="*{image}" required>
+        <small class="error" th:if="${#fields.hasErrors('image')}" th:errors="*{image}"></small>
+
+        <label>Credits</label>
+        <input type="number" th:field="*{credits}" min="1" required>
+        <small class="error" th:if="${#fields.hasErrors('credits')}" th:errors="*{credits}"></small>
+
+        <label>Lecturer</label>
+        <input type="text" th:field="*{lecturer}" required>
+        <small class="error" th:if="${#fields.hasErrors('lecturer')}" th:errors="*{lecturer}"></small>
+
+        <label>Category</label>
+        <select th:field="*{categoryId}" required>
+            <option value="">-- Select Category --</option>
+            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+        </select>
+        <small class="error" th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}"></small>
+
+        <button type="submit">Create</button>
+    </form>
+
+    <a th:href="@{/admin/courses}">Back to course list</a>
+</main>
+</body>
+</html>

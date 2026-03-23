@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Courses</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="topbar">
+    <h1>Admin - Course Management</h1>
+    <nav>
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/admin/courses/create}">Create Course</a>
+        <form th:action="@{/logout}" method="post" class="inline-form">
+            <button type="submit">Logout</button>
+        </form>
+    </nav>
+</header>
+
+<main class="container">
+    <table class="course-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Credits</th>
+            <th>Lecturer</th>
+            <th>Category</th>
+            <th>Image</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="course : ${courses}">
+            <td th:text="${course.id}"></td>
+            <td th:text="${course.name}"></td>
+            <td th:text="${course.credits}"></td>
+            <td th:text="${course.lecturer}"></td>
+            <td>
+                <span th:if="${course.category != null}" th:text="${course.category.name}"></span>
+                <span th:unless="${course.category != null}">N/A</span>
+            </td>
+            <td><img th:src="${course.image}" alt="img" class="thumb"></td>
+            <td>
+                <a th:href="@{/admin/courses/edit/{id}(id=${course.id})}">Edit</a>
+                <form th:action="@{/admin/courses/delete/{id}(id=${course.id})}" method="post" class="inline-form">
+                    <button type="submit" onclick="return confirm('Delete this course?')">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

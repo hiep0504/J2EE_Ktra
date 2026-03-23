@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Registration - Home</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="topbar">
+    <h1>Course Registration Application</h1>
+    <form class="search-form" th:action="@{/courses}" method="get">
+        <input type="text" name="keyword" placeholder="Search course name..." th:value="${keyword}">
+        <button type="submit">Search</button>
+    </form>
+    <nav>
+        <a th:href="@{/home}">Home</a>
+        <a th:href="@{/courses}">Courses</a>
+        <a th:if="${isStudent}" th:href="@{/enroll/my-courses}">My Courses</a>
+        <a th:href="@{/admin/courses}">Manage Courses</a>
+        
+        <!-- Not authenticated: show Register and Login -->
+        <a sec:authorize="!isAuthenticated()" th:href="@{/register}">Register</a>
+        <a sec:authorize="!isAuthenticated()" th:href="@{/login}">Login</a>
+        
+        <!-- Authenticated: show Hello username and Logout -->
+        <span sec:authorize="isAuthenticated()" style="color: #0f172a; font-weight: 500;">
+            Hello <span sec:authentication="name"></span>
+        </span>
+        <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" class="inline-form">
+            <button type="submit">Logout</button>
+        </form>
+    </nav>
+</header>
+
+<main class="container">
+    <h2>Available Courses</h2>
+    <p th:if="${keyword != null and !keyword.isBlank()}">
+        Search result for: <strong th:text="${keyword}"></strong>
+    </p>
+    <p class="success" th:if="${enrollMessage}" th:text="${enrollMessage}"></p>
+    <div class="course-grid">
+        <article class="course-card" th:each="course : ${coursePage.content}">
+            <img th:src="${course.image}" alt="Course image">
+            <div class="course-body">
+                <span class="category" th:text="${course.category.name}">Category</span>
+                <h3 th:text="${course.name}">Course name</h3>
+                <p><strong>Lecturer:</strong> <span th:text="${course.lecturer}"></span></p>
+                <div class="course-footer">
+                    <span class="badge"><span th:text="${course.credits}"></span> Credits</span>
+                    <form th:if="${isStudent and !enrolledCourseIds.contains(course.id)}" th:action="@{/enroll/{courseId}(courseId=${course.id})}" method="post">
+                        <button type="submit" class="btn btn-primary">Enroll Now</button>
+                    </form>
+                    <span class="btn btn-outline" style="cursor: default" th:if="${isStudent and enrolledCourseIds.contains(course.id)}">Enrolled</span>
+                </div>
+            </div>
+        </article>
+    </div>
+
+    <div class="pagination" th:if="${coursePage.totalPages > 1}">
+        <a th:if="${!coursePage.first}" th:href="@{/courses(page=${prevPage},keyword=${keyword})}">Previous</a>
+        <span th:each="i : ${pageNumbers}">
+            <a th:href="@{/courses(page=${i},keyword=${keyword})}" th:text="${i + 1}" th:classappend="${i == currentPage ? 'active' : ''}"></a>
+        </span>
+        <a th:if="${!coursePage.last}" th:href="@{/courses(page=${nextPage},keyword=${keyword})}">Next</a>
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Courses</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="topbar">
+    <h1>My Enrolled Courses</h1>
+    <nav>
+        <a th:href="@{/home}">Home</a>
+        <a th:href="@{/courses}">Courses</a>
+        <form th:action="@{/logout}" method="post" class="inline-form">
+            <button type="submit">Logout</button>
+        </form>
+    </nav>
+</header>
+
+<main class="container">
+    <h2>My Courses</h2>
+
+    <p th:if="${#lists.isEmpty(enrollments)}">You have not enrolled in any course yet.</p>
+
+    <table class="course-table" th:if="${!#lists.isEmpty(enrollments)}">
+        <thead>
+        <tr>
+            <th>Course Name</th>
+            <th>Credits</th>
+            <th>Lecturer</th>
+            <th>Image</th>
+            <th>Enroll Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="enrollment : ${enrollments}">
+            <td th:text="${enrollment.course.name}"></td>
+            <td th:text="${enrollment.course.credits}"></td>
+            <td th:text="${enrollment.course.lecturer}"></td>
+            <td><img th:src="${enrollment.course.image}" alt="img" class="thumb"></td>
+            <td th:text="${enrollment.enrollDate}"></td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

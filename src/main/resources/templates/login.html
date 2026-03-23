@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body sec:authorize="!isAuthenticated()">
+<main class="form-wrapper">
+    <h2>Login</h2>
+    <p class="success" th:if="${param.registered}">Registration successful. Please login.</p>
+    <p class="success" th:if="${param.logout}">You have been logged out.</p>
+    <p class="error" th:if="${param.error}">Invalid username or password.</p>
+
+    <form th:action="@{/login}" method="post" class="card-form">
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" name="username" placeholder="Enter your username" required>
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Enter your password" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+
+    <p style="text-align:center; color:#64748b; margin: 1rem 0 0.75rem;">or</p>
+    <a th:href="@{/oauth2/authorization/google}" class="btn btn-outline" style="width:100%; text-decoration:none;">
+        Continue with Google
+    </a>
+
+    <a th:href="@{/register}">Create a student account</a>
+</main>
+</body>
+</html>
